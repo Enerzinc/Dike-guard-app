@@ -7,6 +7,6 @@ Window {
 
     Loader {
         anchors.fill: parent
-        source: "Frame_1.ui.qml"
+        source: "Dashboard.ui.qml"
     }
 }
