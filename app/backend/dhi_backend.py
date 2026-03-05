@@ -11,8 +11,6 @@ class DHIBackend(QObject):
 
     def __init__(self, json_path: str = "data.json"):
         super().__init__()
-        self._station_count = 15
-        self._selected = 1
         self._percent = 0
         self._json_path = json_path
         
@@ -37,31 +35,11 @@ class DHIBackend(QObject):
             with open(self._json_path, "r") as f:
                 data = json.load(f)
             self.percent = data.get("percent", 0)
-            self.stationCount = data.get("station_count", 15)
         except (json.JSONDecodeError, FileNotFoundError) as e:
             print(f"Error loading JSON: {e}")
     def _write_default(self):
         with open(self._json_path, "w") as f:
-            json.dump({"percent": 0, "station_count": 15, "selected_station": 1}, f, indent=2)
-        
-# ── station count ──────────────────────────────────────────────
-    @pyqtProperty(int, notify=stationCountChanged)
-    def stationCount(self):
-        return self._station_count
-
-    @stationCount.setter
-    def stationCount(self, n: int):
-        n = max(0, int(n))
-        if self._station_count != n:
-            self._station_count = n
-            self.stationCountChanged.emit()
-
-    # ── station selection ──────────────────────────────────────────
-    @pyqtSlot(int)
-    def selectStation(self, station_number: int):
-        self._selected = int(station_number)
-        self.selectedStationChanged.emit(self._selected)
-        print("Selected station:", self._selected)
+            json.dump({"percent": 0}, f, indent=2)
 
     # ── percent ────────────────────────────────────────────────────
     @pyqtProperty(int, notify=percentChanged)
